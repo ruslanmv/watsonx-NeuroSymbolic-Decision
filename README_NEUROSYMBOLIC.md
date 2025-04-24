@@ -160,4 +160,4 @@ Review `config.py` for configuration parameters such as decoding settings (e.g.,
 
 The Neuro Symbolic Approach provides a powerful enhancement to the Rule-Agent project by merging deep neural models and symbolic reasoning. By following the steps above, you can set up and leverage this advanced capability to generate more interpretable and validated outputs.
 
-For further assistance, refer to the project documentation or contact the development team or contact [me](https://github.com/ruslanmv/).
+
