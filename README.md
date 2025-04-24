@@ -1,196 +1,229 @@
-# Watsonx NeuroSymbolic Decision Framework
+# watsonx-NeuroSymbolic-Decision Framework
 
-Welcome to the **watsonx-NeuroSymbolic-Decision** framework! This project provides a robust platform for integrating the generative power of Large Language Models (LLMs), particularly IBM's watsonx.ai, with the precision and explainability of symbolic reasoning systems, including rule engines and ontology reasoners.
+Welcome to the **watsonx-NeuroSymbolic-Decision** framework! This repository provides a robust, extensible platform for integrating the generative power of Large Language Models (LLMs)—notably IBM’s watsonx.ai or open-source alternatives—with the precision, explainability, and compliance of symbolic reasoning systems, including business rule engines and ontology reasoners.
 
-The core idea is to create intelligent systems that leverage both the pattern-recognition strengths of neural networks (LLMs) and the logical deduction capabilities of symbolic AI. This framework facilitates building applications where:
+The core idea is to leverage both:
 
-1.  Natural language interactions (via LLMs) can drive complex decision-making processes.
-2.  Symbolic knowledge (business rules, ontologies) grounds the LLM, ensuring accuracy, consistency, and compliance.
-3.  Reasoning over structured knowledge enhances the LLM's understanding and response generation.
+1. **Neural pattern recognition** (LLMs) for flexible natural-language understanding and generation.
+2. **Symbolic deduction** (rules, ontologies) for accurate, governed, and auditable decision-making.
 
-## Framework Architecture
-
-The framework is an extension of [decision management project.](https://github.com/DecisionsDev/rule-based-llms), where we enables a flexible architecture where LLMs orchestrate interactions with various symbolic components. A typical flow involves:
-1.  **User Interaction:** User poses a query in natural language via a frontend interface.
-2.  **LLM Orchestration:** The core agent (powered by an LLM like watsonx.ai and potentially frameworks like Langchain) interprets the query.
-3.  **Symbolic Component Identification:** The agent determines if the query requires symbolic reasoning (e.g., executing business rules, querying an ontology).
-4.  **Parameter Extraction:** The LLM extracts necessary parameters from the user query for the symbolic component.
-5.  **Symbolic Execution:** The agent invokes the appropriate component:
-    * **Decision Service:** Executes business rules using engines like [IBM Operational Decision Manager (ODM)](https://www.ibm.com/products/operational-decision-manager) or [IBM Automation Decision Services (ADS)](https://www.ibm.com/products/automation-decision-services).
-    * **Ontology Reasoner:** Performs logical deductions over an ontology (e.g., using OWL and reasoners like HermiT) to infer new knowledge or validate information.
-    * *(Extensible for other symbolic systems)*
-6.  **Response Generation:** The LLM uses the precise results from the symbolic component(s) to formulate an accurate and contextually relevant answer.
-
-
-### Core Components
-
-The repository includes reference implementations and tools:
-
-* **`neuro-symbolic-agent`** (Formerly `rule-agent`): The Python backend orchestrating LLM interactions, symbolic component calls, and potentially housing reasoning logic. Built using Python and libraries like Langchain.
-* **`symbolic-components`**: Examples of symbolic knowledge and execution engines:
-    * `decision-services`: Sample ODM/ADS projects (e.g., HR Service).
-    * `ontologies`: Sample OWL ontologies and configurations for reasoners.
-* **`chatbot-frontend`**: A reference React web application demonstrating user interaction with the agent.
-
-Detailed READMEs are available within each component's directory.
-
-## Prerequisites
-
-Ensure your system meets these requirements:
-
-* **Operating System:** Tested on macOS (M1/Intel) and Windows 11 (using Rancher Desktop with WSL2).
-* **Docker:** Required for the standard containerized deployment.
-    * We recommend **Rancher Desktop** for easy setup:
-        * [macOS Install](https://docs.rancherdesktop.io/getting-started/installation#macos)
-        * [Windows Install](https://docs.rancherdesktop.io/getting-started/installation#windows)
-    * Docker Desktop or Docker Engine are alternatives.
-* **Docker Compose:** Typically included with Docker Desktop/Rancher Desktop. Verify with `docker compose version`.
-* **Git:** For cloning the repository.
-* **Python (Optional, for Local Development):** Python 3.11+ is needed if you plan to run or modify the `neuro-symbolic-agent` outside Docker. See [Local Python Environment Setup](#setting-up-a-local-python-development-environment-optional).
-
-### Windows Specific Setup (WSL2)
-
-1.  **Enable WSL2:** Install and enable the [Windows Subsystem for Linux (WSL2)](https://learn.microsoft.com/en-us/windows/wsl/install).
-2.  **Configure Rancher Desktop:** Ensure Rancher Desktop uses the WSL2 backend:
-    <img src="doc/wsl.png" width="600px" height="400px" />
+Together, these capabilities enable intelligent applications where natural-language user queries drive complex, compliant decision processes grounded in formal knowledge.
 
 ---
 
-## Setting Up Your LLM and Symbolic Environment
+## 🚀 Key Features
 
-The framework is designed to be flexible. You can configure it with different LLMs and symbolic backends. The primary supported LLM is **IBM watsonx.ai**, but local models via **Ollama** are also supported for experimentation.
-
-### Option 1: Setting up with Watsonx.ai (Recommended)
-
-Leverage IBM's powerful cloud-based foundation models.
-
-1.  **Set up IBM Watsonx.ai:**
-    * **Account & Service:** Create an IBM Cloud account, set up Watsonx.ai, and instantiate the service. [Guide](https://dataplatform.cloud.ibm.com/docs/content/wsj/getting-started/overview-wx.html?context=wx&audience=wdp).
-    * **API Key:** Generate an API key from your Watsonx console (`Profile and settings` -> `API key`). [Learn how](https://eu-gb.dataplatform.cloud.ibm.com/docs/content/wsj/admin/admin-apikeys.html?context=wx&audience=wdp). Note this key.
-    * **Project & ID:** Create a project in Watsonx.ai ([Guide](https://dataplatform.cloud.ibm.com/docs/content/wsj/manage-data/manage-projects.html?context=wx&audience=wdp)) and note its Project ID (Manage tab -> General -> Details).
-2.  **Clone the Repository:**
-    ```bash
-    # Replace with your actual repository URL
-    git clone [https://github.com/ruslanmv/watsonx-NeuroSymbolic-Decision.git](https://github.com/ruslanmv/watsonx-NeuroSymbolic-Decision.git)
-    cd watsonx-NeuroSymbolic-Decision
-    ```
-3.  **Configure Environment Variables:**
-    * Copy the Watsonx.ai environment template:
-        ```bash
-        # Assuming the template is named watsonx.env
-        cp watsonx.env .env
-        ```
-    * **Edit `.env`:** Fill in your Watsonx.ai credentials:
-        * `WATSONX_APIKEY=<your watsonx.ai API Key>`
-        * `WATSONX_PROJECT_ID=<your watsonx.ai Project ID>`
-        * `WATSONX_URL=<your watsonx.ai region URL>` (e.g., `https://us-south.ml.cloud.ibm.com`)
-        * *(Add any other relevant variables for symbolic components)*
-
-Proceed to [Launch the Docker Topology](#launch-the-docker-topology).
-
-### Option 2: Setting up with Ollama (Local Experimentation)
-
-Run open-source LLMs locally. Suitable for development and testing without cloud dependencies.
-
-1.  **Install Ollama:** Download and install from [ollama.ai/download](https://ollama.ai/download).
-2.  **Download an LLM Model:** Pull a model compatible with the framework (e.g., `mistral`):
-    ```bash
-    ollama pull mistral
-    ```
-    * Ollama serves models at `http://localhost:11434`. Check [Ollama FAQ](https://github.com/ollama/ollama/blob/main/docs/faq.md#how-can-i-allow-additional-web-origins-to-access-ollama) for potential CORS issues with Docker.
-3.  **Clone the Repository:**
-    ```bash
-    # Replace with your actual repository URL
-    git clone [https://github.com/ruslanmv/watsonx-NeuroSymbolic-Decision.git](https://github.com/ruslanmv/watsonx-NeuroSymbolic-Decision.git)
-    cd watsonx-NeuroSymbolic-Decision
-    ```
-4.  **Configure Environment Variables:**
-    * Copy the Ollama environment template:
-        ```bash
-        # Assuming the template is named ollama.env
-        cp ollama.env .env
-        ```
-    * Verify settings in `.env` (defaults usually work for Ollama).
-
-Proceed to [Launch the Docker Topology](#launch-the-docker-topology).
+- **Neuro-Symbolic Agent** (`neuro-symbolic-agent` folder): Orchestrates conversations, tool selection, parameter extraction, symbolic invocation, and response composition. Connectors support:
+  - **LLM backends:** IBM watsonx.ai, Ollama (local), or other models.
+  - **Rule engines:** IBM Operational Decision Manager (ODM), Automation Decision Services (ADS).
+  - **Ontology reasoners:** OWL ontologies with HermiT, Pellet, FaCT++, and additional plug‑ins.
+- **Decision Services** (`decision_services/`): Sample IBM ODM/ADS rule projects (e.g., HR VacationDays) with build and deployment scripts.
+- **Ontology Components** (`symbolic_components/ontologies/`): Reference OWL files, SPARQL queries, and reasoner configurations.
+- **Chatbot Frontend** (`chatbot-frontend/`): React-based UI for natural-language interaction demonstration.
+- **Data & Examples** (`data/`): Pre-packaged decision-app archives (JARs), PDFs, sample input files.
+- **Containerization**: Docker Compose setup to launch ODM/ADS, Neuro-Symbolic Agent, and Frontend in a single topology.
+- **Extensibility**: Easily add new connectors, decision services, ontologies, or custom symbolic systems.
 
 ---
 
-## Launch the Docker Topology
+## 📁 Repository Structure
 
-With the environment configured (`.env` file ready) and the repository cloned, launch the application stack using Docker Compose.
-
-1.  **Open Terminal:** Navigate to the `watsonx-NeuroSymbolic-Decision` directory. Use `wsl` on Windows if applicable.
-2.  **Docker Login (Recommended):** Run `docker login` to avoid image pull rate limits.
-3.  **Build Docker Images:**
-    ```bash
-    docker-compose build
-    ```
-4.  **Run the Application:**
-    ```bash
-    docker-compose up
-    ```
-    Wait for services (ODM/ADS Dev Edition, Neuro-Symbolic Agent, Frontend) to initialize.
-5.  **Access the Application:** Open [http://localhost:8080](http://localhost:8080) in your browser.
-
----
-
-## Using the Framework: Neuro-Symbolic Capabilities
-
-The core strength of this framework lies in its ability to combine LLM flexibility with symbolic rigor.
-
-* **Decision Service Integration:** As shown in the HR demo, the LLM can identify when a query maps to a predefined decision service (like ODM or ADS), extract parameters, invoke the service, and use the precise result. This ensures calculations and decisions adhere strictly to business rules. Configure which services are available via tool descriptors (see `symbolic-components/decision-services` examples and agent configuration).
-* **Ontology-Based Reasoning:** The framework supports integrating OWL ontologies and reasoners (like HermiT, included in the reference agent).
-    * **Knowledge Representation:** Define your domain concepts, properties, and relationships in an OWL ontology (`symbolic-components/ontologies`).
-    * **Logical Form Mapping (Optional):** Implement or train models to map natural language queries to structured logical forms (SPARQL queries or other formal representations) that can be evaluated against the ontology.
-    * **Reasoning:** The agent can load the ontology and use a reasoner to:
-        * Infer implicit knowledge.
-        * Check consistency.
-        * Answer queries requiring logical deduction beyond simple lookups.
-    * **Activation:** Configuration (e.g., environment variables like `USE_ONTOLOGY_REASONER=1` and paths to ontology files in `.env`) determines if and how ontology reasoning is used. Refer to the `neuro-symbolic-agent` documentation for specifics.
-* **Extensibility:** The agent architecture allows adding connectors to other symbolic systems or knowledge bases.
-
-
----
-
-## Extending the Framework
-
-Adapt the framework for your specific use case:
-
-1.  **Define Symbolic Knowledge:** Create your own decision services (ODM/ADS) or ontologies (OWL).
-2.  **Configure Tools:** Create tool descriptors (`.json` files) for your decision services so the LLM agent knows how to use them. Configure ontology paths and reasoner settings.
-3.  **Customize Prompts:** Adjust the prompts used by the LLM agent for tool selection, parameter extraction, and response generation.
-4.  **Develop Frontend:** Modify or replace the reference `chatbot-frontend` as needed.
-5.  **(Advanced) Add Connectors:** Extend the `neuro-symbolic-agent` to interact with other symbolic systems.
-
-Refer to specific component READMEs and the [README_EXTEND.md](README_EXTEND.md) guide (if available/updated) for detailed instructions.
+```
+watsonx-NeuroSymbolic-Decision/
+├── .gitignore
+├── ads.env                     # ADS environment template
+├── docker-compose.yml         # Container orchestration
+├── LICENSE                    # Apache 2.0 license
+├── ollama.env                 # Ollama local-LLM template
+├── README.md                  # This comprehensive guide
+├── README_ADS.md              # ADS-specific setup notes
+├── README_EXTEND.md           # Extension guide
+├── README_LOCAL.md            # Local dev instructions
+├── README_NEUROSYMBOLIC.md    # Neuro-Symbolic design notes
+├── README_WATSONX.md          # Watsonx.ai integration guide
+├── start-ollama.sh            # Helper to launch Ollama
+├── chatbot-frontend/          # React chatbot UI
+│   └── ...
+├── data/                      # Sample decision-app data (JARs, PDFs)
+│   └── ...
+├── decision_services/         # IBM ODM/ADS rule projects and scripts
+│   └── ...
+├── symbolic_components/       # Ontologies and tool descriptors
+│   └── ontologies/
+│       └── ...
+└── neuro-symbolic-agent/      # Core Python backend (formerly rule-agent)
+    ├── CreateLLM.py           # LLM connector factory
+    ├── CreateLLMWatson.py     # Watsonx.ai integration
+    ├── CreateLLMOllama.py     # Ollama integration
+    ├── ODMService.py          # Rule service invocation
+    ├── main.py                # Entrypoint for local Python dev
+    ├── requirements.txt       # Python dependencies
+    └── modules/
+        ├── ontology_engine.py # OWL loading & reasoning
+        ├── ml_model.py        # Optional ML components
+        ├── evaluation.py      # Scoring, validation
+        └── prompt_handler.py  # Parameter extraction logic
+```
 
 ---
 
-## Setting up a Local Python Development Environment (Optional)
+## 🎓 Framework Architecture
 
-For direct development on the `neuro-symbolic-agent`:
+This framework generalizes the original [rule-based-llms](https://github.com/DecisionsDev/rule-based-llms) project into a full neuro-symbolic decision platform. A typical request flow:
 
-1.  **Install Python 3.11+:** Follow OS-specific instructions. (See previous README for Ubuntu example using `deadsnakes` PPA).
-2.  **Create Virtual Environment:**
-    ```bash
-    # In the watsonx-NeuroSymbolic-Decision directory
-    python3 -m venv .venv
-    source .venv/bin/activate # (or .venv\Scripts\activate on Windows)
-    ```
-3.  **Install Dependencies:**
-    ```bash
-    pip install --upgrade pip
-    # Navigate to neuro-symbolic-agent directory if requirements are there
-    # cd neuro-symbolic-agent
-    pip install -r requirements.txt
-    ```
-4.  **Set Environment Variables:** Ensure all necessary variables from your `.env` file (API keys, URLs, paths) are available in your local shell environment.
+1. **User Interaction**: The user submits a query via the frontend chatbot.
+2. **LLM Orchestration**: The Neuro-Symbolic Agent uses an LLM to interpret intent.
+3. **Component Identification**: The agent decides whether to call a decision service, ontology reasoner, or simply respond directly.
+4. **Parameter Extraction**: The LLM extracts structured inputs (e.g., dates, amounts, domain entities).
+5. **Symbolic Execution**:
+   - **Decision Services**: Invokes IBM ODM/ADS for business-rule evaluation.
+   - **Ontology Reasoners**: Loads OWL ontologies and runs HermiT/Pellet to infer new facts or check consistency.
+   - **Custom Tools**: Plug in additional symbolic systems as needed.
+6. **Response Generation**: The LLM composes a final, coherent answer incorporating symbolic outputs.
+
+<details>
+<summary>Conceptual Architecture Diagram</summary>
+
+![Architecture Diagram](doc/architecture.png)
+
+</details>
 
 ---
 
-## FAQ / Troubleshooting
+## 🛠️ Prerequisites
 
-* **Docker Error 137 (Memory):** Increase Docker's allocated memory. Run `docker system prune -a` to clean up resources.
-* **`docker-compose: command not found`:** Use `docker compose` (space instead of hyphen).
-* **Ontology Reasoner Issues:** Verify Java installation (required by some reasoners like HermiT). Check ontology file paths and format. Consult `neuro-symbolic-agent` logs.
+- **OS**: macOS (Intel/M1) or Windows 11 (with WSL2).
+- **Docker & Docker Compose**: For containerized deployment.
+- **Java 11+**: Required by IBM ODM/ADS and OWL reasoners.
+- **Git**: To clone the repo.
+- **Python 3.11+** (optional): For local development of the Neuro-Symbolic Agent.
+
+### Windows (WSL2) Setup
+
+1. Install & enable WSL2: https://learn.microsoft.com/windows/wsl/install
+2. Install Rancher Desktop and configure WSL2 backend: https://rancherdesktop.io/docs
+3. Ensure Docker Compose is accessible in WSL shell: `docker compose version`.
+
+---
+
+## ⚙️ Configuration
+
+### Choose Your LLM Backend
+
+#### 1. Watsonx.ai (Recommended)
+
+1. **Create IBM Cloud & Watsonx.ai service**. Follow:
+   https://dataplatform.cloud.ibm.com/docs/content/wsj/getting-started/overview-wx.html
+2. **Generate API Key**: `Profile & Settings → API keys`.
+3. **Note Project ID** from `Manage → General → Details`.
+4. **Clone Repo**:
+   ```bash
+   git clone https://github.com/ruslanmv/watsonx-NeuroSymbolic-Decision.git
+   cd watsonx-NeuroSymbolic-Decision
+   ```
+5. **Copy & Edit Env**:
+   ```bash
+   cp watsonx.env .env
+   ```
+   Fill in:
+   ```text
+   WATSONX_APIKEY=<your key>
+   WATSONX_PROJECT_ID=<your project id>
+   WATSONX_URL=<region URL>
+   USE_ONTOLOGY_REASONER=1
+   ONTOLOGY_PATH=symbolic_components/ontologies/your_ontology.owl
+   ```
+
+#### 2. Ollama (Local LLM)
+
+1. Install Ollama: https://ollama.ai/download
+2. Pull a model:
+   ```bash
+   ollama pull mistral
+   ```
+3. Clone Repo & Edit Env:
+   ```bash
+   cp ollama.env .env
+   ```
+   Default variables usually suffice (`OLLAMA_URL=http://localhost:11434`).
+
+---
+
+## 🚀 Running the Demo (Docker)
+
+1. Ensure `.env` is configured.
+2. Build & start:
+   ```bash
+   docker compose build
+   docker compose up
+   ```
+3. Navigate to http://localhost:8080
+4. Interact with the chatbot to invoke decision services or ontology queries.
+
+---
+
+## 💡 Neuro‑Symbolic Capabilities in Action
+
+### Decision Service Example (HR VacationDays)
+
+- **Query**: “If Jane joined on 2020-06-15, how many vacation days does she get?”
+- **Flow**:
+  1. LLM maps to `VacationDays` tool.
+  2. Extracts `hireDate=2020-06-15`.
+  3. Calls ODM/ADS rule service.
+  4. Returns precise result (e.g., `20 days`).
+  5. LLM crafts the natural-language response.
+
+### Ontology Reasoning Example
+
+- **Query**: “List all courses that are prerequisites for Advanced AI.”
+- **Flow**:
+  1. Agent loads `AI_Courses.owl`.
+  2. Runs reasoner to infer prerequisite hierarchy.
+  3. Returns structured list, then LLM formats into prose.
+
+---
+
+## 🔧 Extending the Framework
+
+1. **Add Decision Services**:
+   - Place rule projects under `decision_services/`.
+   - Add tool descriptor JSON for each service.
+
+2. **Add Ontologies**:
+   - Drop OWL files into `symbolic_components/ontologies/`.
+   - Update `.env` with new paths and enable flags.
+
+3. **Custom Connectors**:
+   - Implement connector classes in `neuro-symbolic-agent/modules/`.
+   - Register in `main.py` tool registry.
+
+4. **Frontend Enhancements**:
+   - Modify `chatbot-frontend/src` React components.
+   - Update UI assets in `public/`.
+
+Detailed guidance in `README_EXTEND.md` and component‑level READMEs.
+
+---
+
+## 🧪 Local Python Development
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install --upgrade pip
+pip install -r neuro-symbolic-agent/requirements.txt
+cd neuro-symbolic-agent
+python main.py
+``` 
+Ensure same `.env` variables are present in your shell.
+
+---
+
+## ❓ FAQ & Troubleshooting
+
+- **Memory OOM**: Increase Docker RAM, or prune unused images (`docker system prune -a`).
+- **`docker-compose` missing**: Use `docker compose` with space.
+- **Java errors**: Confirm Java 11+ in `PATH` for reasoners.
+- **LLM timeouts**: Check network and service status, adjust timeouts in `.env`.
+
