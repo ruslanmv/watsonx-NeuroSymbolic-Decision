@@ -9,7 +9,6 @@ The core idea is to leverage both:
 
 Together, these capabilities enable intelligent applications where natural-language user queries drive complex, compliant decision processes grounded in formal knowledge.
 
----
 
 ## 🚀 Key Features
 
@@ -24,7 +23,6 @@ Together, these capabilities enable intelligent applications where natural-langu
 - **Containerization**: Docker Compose setup to launch ODM/ADS, Neuro-Symbolic Agent, and Frontend in a single topology.
 - **Extensibility**: Easily add new connectors, decision services, ontologies, or custom symbolic systems.
 
----
 
 ## 📁 Repository Structure
 
@@ -65,7 +63,7 @@ watsonx-NeuroSymbolic-Decision/
         └── prompt_handler.py  # Parameter extraction logic
 ```
 
----
+
 
 ## 🎓 Framework Architecture
 
@@ -88,7 +86,7 @@ This framework generalizes the original [rule-based-llms](https://github.com/Dec
 
 </details>
 
----
+
 
 ## 🛠️ Prerequisites
 
@@ -104,7 +102,7 @@ This framework generalizes the original [rule-based-llms](https://github.com/Dec
 2. Install Rancher Desktop and configure WSL2 backend: https://rancherdesktop.io/docs
 3. Ensure Docker Compose is accessible in WSL shell: `docker compose version`.
 
----
+
 
 ## ⚙️ Configuration
 
@@ -147,7 +145,7 @@ This framework generalizes the original [rule-based-llms](https://github.com/Dec
    ```
    Default variables usually suffice (`OLLAMA_URL=http://localhost:11434`).
 
----
+
 
 ## 🚀 Running the Demo (Docker)
 
@@ -160,7 +158,7 @@ This framework generalizes the original [rule-based-llms](https://github.com/Dec
 3. Navigate to http://localhost:8080
 4. Interact with the chatbot to invoke decision services or ontology queries.
 
----
+
 
 ## 💡 Neuro‑Symbolic Capabilities in Action
 
@@ -182,7 +180,7 @@ This framework generalizes the original [rule-based-llms](https://github.com/Dec
   2. Runs reasoner to infer prerequisite hierarchy.
   3. Returns structured list, then LLM formats into prose.
 
----
+
 
 ## 🔧 Extending the Framework
 
@@ -204,7 +202,6 @@ This framework generalizes the original [rule-based-llms](https://github.com/Dec
 
 Detailed guidance in `README_EXTEND.md` and component‑level READMEs.
 
----
 
 ## 🧪 Local Python Development
 
