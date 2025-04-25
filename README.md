@@ -1,4 +1,4 @@
-# watsonx-NeuroSymbolic-Decision Framework
+# Watsonx NeuroSymbolic Decision Framework
 
 Welcome to the **watsonx-NeuroSymbolic-Decision** framework! This repository provides a robust, extensible platform for integrating the generative power of Large Language Models (LLMs)—notably IBM’s watsonx.ai or open-source alternatives—with the precision, explainability, and compliance of symbolic reasoning systems, including business rule engines and ontology reasoners.
 
