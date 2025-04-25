@@ -67,7 +67,7 @@ watsonx-NeuroSymbolic-Decision/
 
 ## 🎓 Framework Architecture
 
-This framework generalizes the original [rule-based-llms](https://github.com/DecisionsDev/rule-based-llms) project into a full neuro-symbolic decision platform. A typical request flow:
+This framework generalizes the original [rule-based-llms](https://github.com/DecisionsDev/rule-based-llms) project into a full neuro-symbolic decision platform by using the latest research works of [Neurosimbolic Approaches](https://github.com/ruslanmv/Neuro-symbolic-interaction). A typical request flow:
 
 1. **User Interaction**: The user submits a query via the frontend chatbot.
 2. **LLM Orchestration**: The Neuro-Symbolic Agent uses an LLM to interpret intent.
