@@ -135,3 +135,7 @@ inference_results/
 generated_agents/
 /trash
 /chroma_db_data
+*.env
+rule-agent/.env
+rule-agent/.env
+ollama.env
