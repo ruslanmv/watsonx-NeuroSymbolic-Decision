@@ -18,3 +18,4 @@ pypdf
 python-dotenv
 owlready2
 nltk
+scikit-learn

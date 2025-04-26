@@ -153,8 +153,44 @@ This framework generalizes the original [rule-based-llms](https://github.com/Dec
 2. Build & start:
    ```bash
    docker compose build
-   docker compose up
    ```
+
+You will have :
+
+```bash
+[+] Building 2/2
+ ✔ backend Built
+ ✔ frontend Built
+```
+
+This output **already shows** that the Docker images for the `backend` and `frontend` services were built successfully. The `✔ Built` indicates completion without errors.
+
+**To explicitly display or verify the built images:**
+
+You can use the standard Docker command `docker images` or `docker image ls` in your terminal. This will list all local Docker images, including the ones just built by Docker Compose. Look for images named `backend` and `chatbot-frontend` (or similar names derived from your Docker Compose project name and service names).
+
+```bash
+docker images
+# or
+docker image ls
+```
+
+**To run the services defined in your `docker-compose.yml`:**
+
+The command to start all the services is `docker compose up`.
+
+1.  **To run in the foreground (see logs directly):**
+    ```bash
+    docker compose up
+    ```
+    This will build images if they don't exist (which they now do), create networks and volumes if needed, and start the services in the order determined by `depends_on`. You will see the logs from all containers in your terminal. Press `Ctrl+C` to stop the services.
+
+2.  **To run in detached mode (in the background):**
+    ```bash
+    docker compose up -d
+    ```
+    This is typically used for production or when you want to use your terminal for other tasks. The services will start in the background. To stop them, use `docker compose down`.
+
 3. Navigate to http://localhost:8080
 4. Interact with the chatbot to invoke decision services or ontology queries.
 
