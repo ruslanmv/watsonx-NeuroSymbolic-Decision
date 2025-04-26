@@ -139,3 +139,5 @@ generated_agents/
 rule-agent/.env
 rule-agent/.env
 ollama.env
+ollama.env
+watsonx.env
