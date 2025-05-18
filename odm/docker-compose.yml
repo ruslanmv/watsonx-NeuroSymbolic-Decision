@@ -1,0 +1,19 @@
+# docker-compose.yml
+version: "3.8"
+
+services:
+  odm:
+    image: ibmcom/odm
+    hostname: odm
+    container_name: odm
+    environment:
+      - LICENSE=accept
+      - SAMPLE=true
+    healthcheck:
+      test: curl -k -f http://localhost:9060/res/login.jsf || exit 1
+      interval: 5s
+      timeout: 10s
+      retries: 30
+      start_period: 10s
+    ports:
+      - "9060:9060"

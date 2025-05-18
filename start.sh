@@ -277,6 +277,19 @@ elif [ "$ENVIRONMENT" == "local" ]; then
 
 fi
 
+# --- Ask to initialize ODM server ---
+read -p "Initialize ODM server? [Y/n]: " init_odm_choice
+init_odm_choice=${init_odm_choice:-Y}
+if [[ "$init_odm_choice" =~ ^[Yy]$ ]]; then
+    echo -e "${BLUE}Initializing ODM server...${NC}"
+    if [ -x "./odm/start_odm.sh" ]; then
+        ./odm/start_odm.sh
+    else
+        echo -e "${YELLOW}Warning:${NC} './odm/start_odm.sh' not found or not executable. Skipping ODM initialization."
+    fi
+fi
+
+
 echo ""
 echo -e "${BLUE}-----------------------------------------------------${NC}"
 echo -e "${GREEN}Setup process selection complete.${NC}"
